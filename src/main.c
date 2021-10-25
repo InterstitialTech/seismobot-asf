@@ -2,6 +2,8 @@
 #include <system.h>
 #include <port.h>
 
+#include "delay.h"
+
 int main(void) {
 
     // system setup
@@ -15,16 +17,11 @@ int main(void) {
     port_pin_set_config(2, &config_port_pin);
 
     // super loop
-    int i;
     while (1) {
         port_pin_set_output_level(PIN_PA02, true);
-        for (i=0; i<100000; i++) {
-            __asm__("nop");
-        }
+        delay_blink();
         port_pin_set_output_level(PIN_PA02, false);
-        for (i=0; i<100000; i++) {
-            __asm__("nop");
-        }
+        delay_blink();
     }
 
     return 0;

@@ -65,7 +65,9 @@ SRCS += $(ASF)/sam0/drivers/port/port.c
 ################################
 
 INC_FLAGS += -I $(INC_DIR)
+
 SRCS += $(SRC_DIR)/main.c
+SRCS += $(SRC_DIR)/delay.c
 
 #########
 # rules
