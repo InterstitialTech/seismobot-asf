@@ -11,5 +11,6 @@ struct serial_data {
 
 void serial_init(struct serial_data*);
 void serial_hello(struct serial_data*);
+void serial_uint24(struct serial_data*, uint32_t);
 
 #endif

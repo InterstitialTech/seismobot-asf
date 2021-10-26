@@ -29,6 +29,7 @@ int main(void) {
         delay_blink();
 
         serial_hello(&serial);
+        serial_uint24(&serial, 16777215);
 
     }
 

@@ -24,8 +24,33 @@ void serial_init(struct serial_data *data) {
 
 void serial_hello(struct serial_data *data) {
 
-    char buffer[13] = "Hello world\r\n";
+    uint8_t buffer[13] = "Hello world\r\n";
 
     usart_write_buffer_wait(&data->usart_instance, buffer, 13);
+
+}
+
+void get_dec_str (uint8_t* str, size_t len, uint32_t val) {
+
+    uint8_t i;
+    for(i=1; i<=len; i++) {
+        str[len-i] = (uint8_t) ((val % 10UL) + '0');
+        val/=10;
+    }
+
+    str[i-1] = '\0';
+
+}
+
+void serial_uint24(struct serial_data *data, uint32_t val) {
+
+    // handles 24-bit uints, which can be 8 digits long (base 10)
+
+    uint8_t buffer[10];
+    get_dec_str(buffer, 8, val);
+    buffer[8] = '\r';
+    buffer[9] = '\n';
+
+    usart_write_buffer_wait(&data->usart_instance, buffer, 10);
 
 }
