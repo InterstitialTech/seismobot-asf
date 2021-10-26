@@ -13,15 +13,14 @@ OBJDUMP=arm-none-eabi-objdump
 
 CFLAGS = -mcpu=cortex-m0plus -mthumb
 CFLAGS += -Wall -std=c11
-CFLAGS += -O1
-#CFLAGS += -g
+CFLAGS += -Os
+CFLAGS += -g3
 CFLAGS += -ffunction-sections -fdata-sections
 CFLAGS += -Wl,--gc-sections -Wl,-Map=$(BLD_DIR)/$(PROJ_NAME).map
 CFLAGS += -T $(ASF)/sam0/utils/linker_scripts/samd09/gcc/samd09c13a_flash.ld
 
 CFLAGS += -D __SAMD09C13A__
 CFLAGS += -D SYSTICK_MODE
-#CFLAGS += -D EXTINT_CALLBACK_MODE
 CFLAGS += -D USART_CALLBACK_MODE
 
 LDFLAGS += -lm
@@ -104,6 +103,7 @@ $(LST): $(ELF)
 $(ELF): $(SRCS)
 	mkdir -p $(BLD_DIR)
 	$(CC) $(CFLAGS) $(INC_FLAGS) $^ -o $@ $(LDFLAGS)
+	size $(ELF)
 
 flash:
 	openocd -f seismobot.cfg -c "program $(ELF) verify reset exit"
