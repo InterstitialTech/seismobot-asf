@@ -56,9 +56,9 @@ SRCS += $(ASF)/sam0/drivers/system/clock/clock_samd09_d10_d11/gclk.c
 
 INC_FLAGS += -I $(ASF)/common/utils/interrupt
 SRCS += $(ASF)/common/utils/interrupt/interrupt_sam_nvic.c
-SRCS += $(ASF)/sam0/drivers/system/clock/clock_samd09_d10_d11/clock.c
 
 INC_FLAGS += -I $(ASF)/sam0/drivers/system/clock/clock_samd09_d10_d11/module_config
+SRCS += $(ASF)/sam0/drivers/system/clock/clock_samd09_d10_d11/clock.c
 
 #############
 # API modules
@@ -76,6 +76,11 @@ SRCS += $(ASF)/sam0/drivers/sercom/usart/usart.c
 SRCS += $(ASF)/sam0/drivers/sercom/usart/usart_interrupt.c
 SRCS += $(ASF)/sam0/drivers/sercom/sercom_interrupt.c
 
+# SPI
+INC_FLAGS += -I $(ASF)/sam0/drivers/sercom/spi
+INC_FLAGS += -I $(ASF)/sam0/drivers/sercom/spi/module_config
+SRCS += $(ASF)/sam0/drivers/sercom/spi/spi.c
+
 ################################
 # Project-specific source files
 ################################
@@ -85,6 +90,7 @@ INC_FLAGS += -I $(INC_DIR)
 SRCS += $(SRC_DIR)/main.c
 SRCS += $(SRC_DIR)/delay.c
 SRCS += $(SRC_DIR)/serial.c
+SRCS += $(SRC_DIR)/max11200.c
 
 #########
 # rules

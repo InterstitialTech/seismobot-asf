@@ -4,15 +4,19 @@
 
 #include "delay.h"
 #include "serial.h"
+#include "max11200.h"
 
 int main(void) {
 
-    // system setup
+    // setup core system and peripherals
 
     system_init(); // clock, board, events, extint, divas
 
     struct serial_data serial;
     serial_init(&serial);
+
+    struct max_data max;
+    max_init(&max);
 
     // configure LED pin
     struct port_config config_port_pin;
@@ -21,6 +25,7 @@ int main(void) {
     port_pin_set_config(2, &config_port_pin);
 
     // super loop
+    uint32_t value;
     while (1) {
 
         port_pin_set_output_level(PIN_PA02, true);
@@ -29,7 +34,8 @@ int main(void) {
         delay_blink();
 
         serial_hello(&serial);
-        serial_uint24(&serial, 16777215);
+        value = max_read(&max);
+        serial_uint24(&serial, value);
 
     }
 
