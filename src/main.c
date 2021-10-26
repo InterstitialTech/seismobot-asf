@@ -3,12 +3,16 @@
 #include <port.h>
 
 #include "delay.h"
+#include "serial.h"
 
 int main(void) {
 
     // system setup
 
     system_init(); // clock, board, events, extint, divas
+
+    struct serial_data serial;
+    serial_init(&serial);
 
     // configure LED pin
     struct port_config config_port_pin;
@@ -18,10 +22,14 @@ int main(void) {
 
     // super loop
     while (1) {
+
         port_pin_set_output_level(PIN_PA02, true);
         delay_blink();
         port_pin_set_output_level(PIN_PA02, false);
         delay_blink();
+
+        serial_hello(&serial);
+
     }
 
     return 0;
