@@ -1,4 +1,4 @@
-# seismobot-firmware
+# seismobot-asf
 ASF-based firmware for the Seismobot geophone board
 
 ## Dependencies
