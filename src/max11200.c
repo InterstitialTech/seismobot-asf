@@ -26,15 +26,20 @@ void max_init(struct max_data *data) {
 
 uint32_t max_read(struct max_data *data) {
 
-    uint8_t tx, rx;
-    tx = 0b11000010;    // START, MODE, b5, rs3, rs2, rs1, RS0, write
-    rx = 0;             // init
+    uint8_t tx[2];
+    uint8_t rx[2];
+
+    tx[0] = 0b11000010;
+    tx[1] = 0;
 
     spi_select_slave(&data->spi_instance, &data->slave, true);
-    //spi_transceive_wait(&data->spi_instance, &tx, &rx);
-    spi_write(&data->spi_instance, tx);
+    spi_transceive_buffer_wait(&data->spi_instance, tx, rx, 2);
     spi_select_slave(&data->spi_instance, &data->slave, false);
 
-    return rx;
+    // 8 cycles, then 25 us break, then 8 more
+    // mosi is correct for the first 8 cycles
+    // miso is high as long as CS is low, resulting in rx=0xff
+
+    return rx[1];
 
 }
