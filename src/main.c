@@ -33,8 +33,7 @@ int main(void) {
         port_pin_set_output_level(PIN_PA02, false);
         delay_blink();
 
-        serial_hello(&serial);
-        value = max_read(&max);
+        value = max_reg_read24(&max, MAX_REG_DATA);
         serial_uint24(&serial, value);
 
     }

@@ -22,24 +22,74 @@ void max_init(struct max_data *data) {
     config_slave.ss_pin = PIN_PA05;
     spi_attach_slave(&data->slave, &config_slave);
 
+    // config registers
+    // (from https://github.com/bankrasrg/maxim-max11210)
+
+    max_reg_write8(data, MAX_REG_CTRL1, 0b11000000);
+    max_reg_write8(data, MAX_REG_CTRL2, 0b11110101);
+    max_reg_write8(data, MAX_REG_CTRL3, 0b00011110);
+
 }
 
-uint32_t max_read(struct max_data *data) {
+uint8_t max_reg_read8(struct max_data *data, uint8_t addr) {
 
     uint8_t tx[2];
     uint8_t rx[2];
 
-    tx[0] = 0b11000010;
+    addr = 0b1111 & addr;
+    tx[0] = 0b11000001 | (addr << 1);
     tx[1] = 0;
+
+    rx[0] = 0;
+    rx[1] = 0;
 
     spi_select_slave(&data->spi_instance, &data->slave, true);
     spi_transceive_buffer_wait(&data->spi_instance, tx, rx, 2);
     spi_select_slave(&data->spi_instance, &data->slave, false);
 
-    // 8 cycles, then 25 us break, then 8 more
-    // mosi is correct for the first 8 cycles
-    // miso is high as long as CS is low, resulting in rx=0xff
-
     return rx[1];
 
 }
+
+void max_reg_write8(struct max_data *data, uint8_t addr, uint8_t val) {
+
+    uint8_t tx[2];
+    uint8_t rx[2];  // don't need?
+
+    addr = 0b1111 & addr;
+    tx[0] = 0b11000000 | (addr << 1);
+    tx[1] = val;
+
+    rx[0] = 0;
+    rx[1] = 0;
+
+    spi_select_slave(&data->spi_instance, &data->slave, true);
+    spi_transceive_buffer_wait(&data->spi_instance, tx, rx, 2);
+    spi_select_slave(&data->spi_instance, &data->slave, false);
+
+}
+
+uint32_t max_reg_read24(struct max_data *data, uint8_t addr) {
+
+    uint8_t tx[4];
+    uint8_t rx[4];
+
+    addr = 0b1111 & addr;
+    tx[0] = 0b11000001 | (addr << 1);
+    tx[1] = 0;
+    tx[2] = 0;
+    tx[3] = 0;
+
+    rx[0] = 0;
+    rx[1] = 0;
+    rx[2] = 0;
+    rx[3] = 0;
+
+    spi_select_slave(&data->spi_instance, &data->slave, true);
+    spi_transceive_buffer_wait(&data->spi_instance, tx, rx, 4);
+    spi_select_slave(&data->spi_instance, &data->slave, false);
+
+    return (rx[0] << 3) | (rx[1] << 2) | (rx[2] << 1) | (rx[3] << 0);
+
+}
+
