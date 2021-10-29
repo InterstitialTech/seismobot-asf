@@ -22,6 +22,8 @@ struct max_data {
 
 void max_init(struct max_data *data);
 
+void max_self_cal(struct max_data *data);
+
 uint8_t max_reg_read8(struct max_data *data, uint8_t addr);
 void max_reg_write8(struct max_data *data, uint8_t addr, uint8_t val);
 uint32_t max_reg_read24(struct max_data *data, uint8_t addr);

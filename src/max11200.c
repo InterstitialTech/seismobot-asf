@@ -1,4 +1,5 @@
 #include "max11200.h"
+#include "delay.h"
 
 void max_init(struct max_data *data) {
 
@@ -28,6 +29,20 @@ void max_init(struct max_data *data) {
     max_reg_write8(data, MAX_REG_CTRL1, 0b11000000);
     max_reg_write8(data, MAX_REG_CTRL2, 0b11110101);
     max_reg_write8(data, MAX_REG_CTRL3, 0b00011110);
+
+    max_self_cal(data);
+
+}
+
+void max_self_cal(struct max_data *data) {
+
+    uint8_t tx = 0b10010000;
+
+    spi_select_slave(&data->spi_instance, &data->slave, true);
+    spi_write_buffer_wait(&data->spi_instance, &tx, 1);
+    spi_select_slave(&data->spi_instance, &data->slave, false);
+
+    delay_blink();
 
 }
 
