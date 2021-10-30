@@ -24,11 +24,9 @@ void max_init(struct max_data *data) {
     spi_attach_slave(&data->slave, &config_slave);
 
     // config registers
-    // (from https://github.com/bankrasrg/maxim-max11210)
-
-    max_reg_write8(data, MAX_REG_CTRL1, 0b11000000);
-    max_reg_write8(data, MAX_REG_CTRL2, 0b11110101);
-    max_reg_write8(data, MAX_REG_CTRL3, 0b00011110);
+    max_reg_write8(data, MAX_REG_CTRL1, 0b10100000);
+    max_reg_write8(data, MAX_REG_CTRL2, 0b00001111);
+    max_reg_write8(data, MAX_REG_CTRL3, 0b00011000);
 
     max_self_cal(data);
 
